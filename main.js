@@ -81,3 +81,28 @@ timeSel.addEventListener('change', render);
 reloadBtn.addEventListener('click', loadData);
 
 loadData();
+
+// ---- PWA bootstrapping ----
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(console.error)
+  })
+}
+
+// Tombol install kustom (opsional)
+let deferredPrompt
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault()
+  deferredPrompt = e
+  const btn = document.getElementById('btnInstall')
+  if (btn) btn.hidden = false
+})
+
+document.getElementById('btnInstall')?.addEventListener('click', async () => {
+  if (!deferredPrompt) return
+  deferredPrompt.prompt()
+  await deferredPrompt.userChoice
+  deferredPrompt = null
+  const btn = document.getElementById('btnInstall')
+  if (btn) btn.hidden = true
+})

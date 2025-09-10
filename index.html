@@ -6,6 +6,13 @@
   <title>TTM 2025</title>
   <link rel="stylesheet" href="./styles.css" />
   <link rel="icon" href="icon.png" type="image/x-icon">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#941600">
+  <meta name="mobile-web-app-capable" content="yes">
+  <!-- iOS tidak ada prompt otomatis -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  
 </head>
 <body>
   <header class="site-header">
@@ -19,6 +26,7 @@
         <li><a href="./mistik.html">Mistik</a></li>
         <li><a href="./silang.html">Silang</a></li>
         <li><a href="./note.html">Note</a></li>
+        <button id="btnInstall" hidden>Install App</button>
       </ul>
     </nav>
   </header>

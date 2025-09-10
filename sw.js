@@ -1,8 +1,10 @@
-const CACHE_NAME = 'ambalator-v1';
+const CACHE_NAME = 'ambalator-v2';
 const ASSETS = [
   '/', '/index.html', '/styles.css', '/main.js',
-  '/mistik.html', '/manifest.webmanifest',
-  'icon.png'
+  '/mistik.html', '/silang.html', '/note.html',
+  '/manifest.webmanifest',
+  '/icons/icon-192.png', '/icons/icon-512.png',
+  '/icons/maskable-192.png', '/icons/maskable-512.png'
 ];
 
 self.addEventListener('install', e => {
