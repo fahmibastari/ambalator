@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Silang — Macau Data</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <link rel="icon" href="icon.png" type="image/x-icon">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" id="site-nav">
+      <a class="brand" href="./">AMBALATOR 2.0</a>
+      <button class="burger" id="nav-toggle" aria-label="Buka menu" aria-controls="nav-list" aria-expanded="false">
+        <span></span>
+      </button>
+      <ul id="nav-list">
+        <li><a href="./">Data 2025</a></li>
+        <li><a href="./mistik.html" >Mistik</a></li>
+        <li><a href="./silang.html" class="active">Silang</a></li>
+        <li><a href="./note.html">Note</a></li>
+      </ul>
+      
+    </nav>
+  </header>
+
+  <main class="silang-wrap">
+    <section class="card">
+      <h1 style="margin:0 0 8px;font-size:22px">Silang</h1>
+      <p class="hint" style="margin:0 0 12px">
+        Isi tabel 4 kolom × 5 baris. Klik <b>Silang</b> untuk menyilang sel selain posisi yang diambil (baris 1 tidak disilang).
+      </p>
+
+      <div class="silang-grid">
+        <table class="silang-table" id="silang-table" aria-label="Tabel Silang 4x5">
+          <tbody>
+            <!-- Row 1 (tidak disilang) -->
+            <tr>
+              <td><div class="cell"><input class="silang-input" data-row="1" data-col="1" placeholder="r1c1" inputmode="numeric" pattern="[0-9]*" /></div></td>
+              <td><div class="cell"><input class="silang-input" data-row="1" data-col="2" placeholder="r1c2" inputmode="numeric" pattern="[0-9]*" /></div></td>
+              <td><div class="cell"><input class="silang-input" data-row="1" data-col="3" placeholder="r1c3" inputmode="numeric" pattern="[0-9]*" /></div></td>
+              <td><div class="cell"><input class="silang-input" data-row="1" data-col="4" placeholder="r1c4" inputmode="numeric" pattern="[0-9]*" /></div></td>
+            </tr>
+            <!-- Row 2 -->
+            <tr>
+              <td><div class="cell strike"><input class="silang-input" data-row="2" data-col="1" placeholder="r2c1" inputmode="numeric" pattern="[0-9]*" /></div></td>
+              <td><div class="cell strike"><input class="silang-input" data-row="2" data-col="2" placeholder="r2c2" inputmode="numeric" pattern="[0-9]*" /></div></td>
+              <td><div class="cell strike"><input class="silang-input" data-row="2" data-col="3" placeholder="r2c3" inputmode="numeric" pattern="[0-9]*" /></div></td>
+              <td><div class="cell strike"><input class="silang-input" data-row="2" data-col="4" placeholder="r2c4" inputmode="numeric" pattern="[0-9]*" /></div></td>
+            </tr>
+            <!-- Row 3 -->
+            <tr>
+              <td><div class="cell strike"><input class="silang-input" data-row="3" data-col="1" placeholder="r3c1" inputmode="numeric" pattern="[0-9]*" /></div></td>
+              <td><div class="cell strike"><input class="silang-input" data-row="3" data-col="2" placeholder="r3c2" inputmode="numeric" pattern="[0-9]*" /></div></td>
+              <td><div class="cell strike"><input class="silang-input" data-row="3" data-col="3" placeholder="r3c3" inputmode="numeric" pattern="[0-9]*" /></div></td>
+              <td><div class="cell strike"><input class="silang-input" data-row="3" data-col="4" placeholder="r3c4" inputmode="numeric" pattern="[0-9]*" /></div></td>
+            </tr>
+            <!-- Row 4 -->
+            <tr>
+              <td><div class="cell strike"><input class="silang-input" data-row="4" data-col="1" placeholder="r4c1" inputmode="numeric" pattern="[0-9]*" /></div></td>
+              <td><div class="cell strike"><input class="silang-input" data-row="4" data-col="2" placeholder="r4c2" inputmode="numeric" pattern="[0-9]*" /></div></td>
+              <td><div class="cell strike"><input class="silang-input" data-row="4" data-col="3" placeholder="r4c3" inputmode="numeric" pattern="[0-9]*" /></div></td>
+              <td><div class="cell strike"><input class="silang-input" data-row="4" data-col="4" placeholder="r4c4" inputmode="numeric" pattern="[0-9]*" /></div></td>
+            </tr>
+            <!-- Row 5 -->
+            <tr>
+              <td><div class="cell strike"><input class="silang-input" data-row="5" data-col="1" placeholder="r5c1" inputmode="numeric" pattern="[0-9]*" /></div></td>
+              <td><div class="cell strike"><input class="silang-input" data-row="5" data-col="2" placeholder="r5c2" inputmode="numeric" pattern="[0-9]*" /></div></td>
+              <td><div class="cell strike"><input class="silang-input" data-row="5" data-col="3" placeholder="r5c3" inputmode="numeric" pattern="[0-9]*" /></div></td>
+              <td><div class="cell strike"><input class="silang-input" data-row="5" data-col="4" placeholder="r5c4" inputmode="numeric" pattern="[0-9]*" /></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="actions" style="margin-top:12px">
+        <button id="btnSilang" class="btn" type="button">Silang</button>
+        <button id="btnClear" class="btn secondary" type="button">Reset</button>
+      </div>
+    </section>
+
+    <section id="hasil" class="card" style="display:none">
+      <h2 style="margin:0 0 8px;font-size:18px">Hasil Pengambilan</h2>
+      <div class="chips" id="chips"></div>
+      <small class="hint" id="note"></small>
+    </section>
+  </main>
+
+  <script>
+    // burger
+    (function(){
+      const nav=document.getElementById('site-nav'), btn=document.getElementById('nav-toggle');
+      if(!nav||!btn) return;
+      btn.addEventListener('click',()=>{ nav.classList.toggle('open'); btn.setAttribute('aria-expanded', nav.classList.contains('open')); });
+    })();
+
+    // ===== Silang logic =====
+    const picks = [
+      [2,2],[2,4],
+      [3,1],[3,3],
+      [4,2],[4,4],
+      [5,1],[5,3]
+    ];
+
+    const table = document.getElementById('silang-table');
+    const btnSilang = document.getElementById('btnSilang');
+    const btnClear = document.getElementById('btnClear');
+    const hasilWrap = document.getElementById('hasil');
+    const chips = document.getElementById('chips');
+    const note = document.getElementById('note');
+
+    const $cell = (r,c)=> table.querySelector(`.silang-input[data-row="${r}"][data-col="${c}"]`)?.parentElement;
+    const $val  = (r,c)=> table.querySelector(`.silang-input[data-row="${r}"][data-col="${c}"]`)?.value.trim() || '';
+
+    function forEachInput(cb){
+      table.querySelectorAll('.silang-input').forEach(inp=>{
+        cb(inp, Number(inp.dataset.row), Number(inp.dataset.col));
+      });
+    }
+
+    function clearStrikes(){
+      table.querySelectorAll('.cell.strike').forEach(cell=>cell.classList.remove('animate'));
+    }
+
+    function doStrikes(){
+      forEachInput((inp,r,c)=>{
+        if (r===1) return;                     // baris 1: jangan disilang
+        const cell = inp.parentElement;        // .cell
+        const keep = picks.some(([pr,pc])=> pr===r && pc===c);
+        if (!keep && cell.classList.contains('strike')){
+          cell.classList.remove('animate');    // reset bila ada
+          void cell.offsetWidth;               // reflow untuk retrigger animasi
+          cell.classList.add('animate');       // jalankan animasi
+        }
+      });
+    }
+
+    function compute(){
+      const taken = picks.map(([r,c])=> $val(r,c)).filter(Boolean);
+      chips.innerHTML='';
+      if (!taken.length){ hasilWrap.style.display='none'; return; }
+      taken.forEach(v=>{
+        const el=document.createElement('span'); el.className='chip'; el.textContent=v; chips.appendChild(el);
+      });
+      note.textContent='Diambil dari posisi: (2,2), (2,4), (3,1), (3,3), (4,2), (4,4), (5,1), (5,3). Baris pertama tidak disilang & tidak diambil.';
+      hasilWrap.style.display='block';
+    }
+
+    btnSilang.addEventListener('click', ()=>{
+      clearStrikes();
+      doStrikes();
+      setTimeout(compute, 350); // beri waktu animasi
+    });
+
+    btnClear.addEventListener('click', ()=>{
+      forEachInput(inp=> inp.value='');
+      clearStrikes();
+      hasilWrap.style.display='none';
+    });
+
+    // Input hanya angka
+    table.addEventListener('input', (e)=>{
+      if(!(e.target instanceof HTMLInputElement)) return;
+      e.target.value = e.target.value.replace(/[^\d]/g,'');
+    });
+
+    // Enter = fokus ke input berikutnya
+    table.addEventListener('keydown', (e)=>{
+      if(e.key!=='Enter') return;
+      e.preventDefault();
+      const inputs = Array.from(table.querySelectorAll('.silang-input'));
+      const i = inputs.indexOf(e.target);
+      if (i>=0 && i<inputs.length-1) inputs[i+1].focus();
+    });
+
+    // ===== KEY LOCALSTORAGE =====
+  const KEY_SILANG = "amb_silang_v1";
+
+function saveSilang() {
+  const data = {};
+  forEachInput((inp, r, c) => {
+    data[`r${r}c${c}`] = inp.value;
+  });
+  data.hasil = chips.innerHTML;
+  data.note = note.textContent;
+  data.visible = hasilWrap.style.display === "block";
+  localStorage.setItem(KEY_SILANG, JSON.stringify(data));
+}
+
+function loadSilang() {
+  try {
+    const raw = localStorage.getItem(KEY_SILANG);
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    forEachInput((inp, r, c) => {
+      const key = `r${r}c${c}`;
+      if (data[key]) inp.value = data[key];
+    });
+    if (data.hasil) chips.innerHTML = data.hasil;
+    if (data.note) note.textContent = data.note;
+    if (data.visible) hasilWrap.style.display = "block";
+  } catch {}
+}
+
+// override compute untuk simpan
+function compute() {
+  const taken = picks.map(([r, c]) => $val(r, c)).filter(Boolean);
+  chips.innerHTML = "";
+  if (!taken.length) {
+    hasilWrap.style.display = "none";
+    localStorage.removeItem(KEY_SILANG);
+    return;
+  }
+  taken.forEach((v) => {
+    const el = document.createElement("span");
+    el.className = "chip";
+    el.textContent = v;
+    chips.appendChild(el);
+  });
+  note.textContent =
+    "Diambil dari posisi: (2,2), (2,4), (3,1), (3,3), (4,2), (4,4), (5,1), (5,3). Baris pertama tidak disilang & tidak diambil.";
+  hasilWrap.style.display = "block";
+  saveSilang();
+}
+
+// simpan tiap input change
+table.addEventListener("input", () => saveSilang());
+
+btnClear.addEventListener("click", () => {
+  forEachInput((inp) => (inp.value = ""));
+  clearStrikes();
+  hasilWrap.style.display = "none";
+  localStorage.removeItem(KEY_SILANG);
+});
+
+// init
+loadSilang();
+  </script>
+</body>
+</html>

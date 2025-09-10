@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Data Toto Macau 2025 — Ringkas</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <link rel="icon" href="icon.png" type="image/x-icon">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" id="site-nav">
+      <a class="brand" href="./">AMBALATOR 2.0</a>
+      <button class="burger" id="nav-toggle" aria-label="Buka menu" aria-controls="nav-list" aria-expanded="false">
+        <span></span>
+      </button>
+      <ul id="nav-list">
+        <li><a href="./" class="active">Data 2025</a></li>
+        <li><a href="./mistik.html">Mistik</a></li>
+        <li><a href="./silang.html">Silang</a></li>
+        <li><a href="./note.html">Note</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="controls card">
+      <div class="row">
+        <label for="month">Bulan:</label>
+        <select id="month">
+          <option value="all">Semua</option>
+          <option>Januari</option>
+          <option>Februari</option>
+          <option>Maret</option>
+          <option>April</option>
+          <option>Mei</option>
+          <option>Juni</option>
+          <option>Juli</option>
+          <option>Agustus</option>
+          <option>September</option>
+          <option>Oktober</option>
+          <option>November</option>
+          <option>Desember</option>
+        </select>
+
+        <label for="search">Cari tanggal (mis. "09 Sep"):</label>
+        <input id="search" type="search" placeholder="cth: 09 Sep" />
+
+        <label for="time-col">Kolom jam:</label>
+        <select id="time-col">
+          <option value="00:01">00:01</option>
+          <option value="13:00">13:00</option>
+          <option value="16:00">16:00</option>
+          <option value="19:00">19:00</option>
+          <option value="22:00">22:00</option>
+          <option value="23:00">23:00</option>
+          <option value="all" selected>Semua</option>
+        </select>
+
+        <button id="reload">Muat Ulang</button>
+      </div>
+      <small class="hint">
+        Sumber data diparsing dari livedrawpedia (Data Toto Macau 2025). Pembaruan mengikuti sumbernya.
+      </small>
+    </section>
+
+    <section class="table-wrap">
+      <table id="data-table">
+        <thead>
+          <tr>
+            <th style="min-width:160px">Hari & Tanggal</th>
+            <th>00:01 WIB</th>
+            <th>13:00 WIB</th>
+            <th>16:00 WIB</th>
+            <th>19:00 WIB</th>
+            <th>22:00 WIB</th>
+            <th>23:00 WIB</th>
+          </tr>
+        </thead>
+        <tbody id="table-body">
+          <tr><td colspan="7" class="center">Memuat data…</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>© <span id="year"></span> Macau Data — statis + Netlify Functions proxy.</p>
+  </footer>
+
+  <script>
+    // Burger toggle (kecil & universal)
+    (function(){
+      const nav = document.getElementById('site-nav');
+      const btn = document.getElementById('nav-toggle');
+      const list = document.getElementById('nav-list');
+      if(!nav || !btn || !list) return;
+      btn.addEventListener('click', () => {
+        const open = nav.classList.toggle('open');
+        btn.setAttribute('aria-expanded', open ? 'true':'false');
+      });
+    })();
+  </script>
+  <script src="./main.js"></script>
+</body>
+</html>

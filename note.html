@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Note — Macau Data</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <link rel="icon" href="icon.png" type="image/x-icon">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" id="site-nav">
+      <a class="brand" href="./">AMBALATOR 2.0</a>
+      <button class="burger" id="nav-toggle" aria-label="Buka menu" aria-controls="nav-list" aria-expanded="false">
+        <span></span>
+      </button>
+      <ul id="nav-list">
+        <li><a href="./">Data 2025</a></li>
+        <li><a href="./mistik.html">Mistik</a></li>
+        <li><a href="./silang.html">Silang</a></li>
+        <li><a href="./note.html" class="active">Note</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="note-wrap">
+    <section class="card">
+      <h1 style="margin:0 0 8px;font-size:22px">Note — Kombinasi Angka</h1>
+      <p class="hint" style="margin:0 0 12px">
+        Simpan kombinasi angka tanpa database (cache browser). Tandai dengan checklist jika sudah dipakai. <br/>
+        Contoh input: <code>1280</code> atau <code>12 80 63</code> atau <code>12,80,63</code>.
+      </p>
+
+      <form class="note-form" id="note-form" autocomplete="off">
+        <input id="note-input" class="note-input" placeholder="Tulis kombinasi angka… (spasi/komma boleh)" />
+        <button class="note-btn" id="btn-add" type="submit">Tambah</button>
+        <button class="note-btn reset" id="btn-reset" type="button">Reset</button>
+      </form>
+
+      <div class="note-list" id="note-list">
+        <!-- render items here -->
+      </div>
+
+      <div class="note-empty" id="note-empty" style="display:none">
+        Belum ada catatan. Tambahkan kombinasi angka di atas.
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // burger
+    (function(){
+      const nav=document.getElementById('site-nav'), btn=document.getElementById('nav-toggle');
+      if(!nav||!btn) return;
+      btn.addEventListener('click',()=>{ nav.classList.toggle('open'); btn.setAttribute('aria-expanded', nav.classList.contains('open')); });
+    })();
+
+    // ===== NOTE logic (localStorage) =====
+    const KEY='amb_notes_v1';
+    /** @type {{id:string,text:string,done:boolean,created:number}[]} */
+    let items = [];
+
+    const $ = (s)=>document.querySelector(s);
+    const form = $('#note-form');
+    const input = $('#note-input');
+    const listEl = $('#note-list');
+    const emptyEl = $('#note-empty');
+    const btnReset = $('#btn-reset');
+
+    function load(){
+      try{
+        const raw = localStorage.getItem(KEY);
+        items = raw ? JSON.parse(raw) : [];
+      }catch(e){ items = []; }
+    }
+    function save(){
+      localStorage.setItem(KEY, JSON.stringify(items));
+    }
+
+    function normalizeText(t){
+      // keep digits, space, comma; collapse spaces; trim commas/spaces
+      return (t||'')
+        .replace(/[^\d,\s]/g,'')
+        .replace(/\s+/g,' ')
+        .replace(/,\s*/g,',')
+        .trim()
+        .replace(/^,|,$/g,'');
+    }
+
+    function render(){
+      listEl.innerHTML='';
+      if(!items.length){
+        emptyEl.style.display='block';
+        return;
+      }
+      emptyEl.style.display='none';
+      // latest first
+      const sorted = [...items].sort((a,b)=>b.created - a.created);
+      sorted.forEach(it=>{
+        const row = document.createElement('div');
+        row.className='note-item';
+        row.dataset.id = it.id;
+
+        const cb = document.createElement('input');
+        cb.type='checkbox';
+        cb.checked = !!it.done;
+        cb.setAttribute('aria-label','Tandai sudah dipakai');
+
+        const text = document.createElement('div');
+        text.className='note-text' + (it.done ? ' done':'');
+        text.textContent = it.text;
+
+        const meta = document.createElement('div');
+        meta.className='note-meta';
+        const d = new Date(it.created);
+        meta.textContent = d.toLocaleString();
+
+        const actions = document.createElement('div');
+        actions.className='note-actions';
+        const del = document.createElement('button');
+        del.className='note-icon-btn';
+        del.type='button';
+        del.title='Hapus item';
+        del.textContent='✕';
+
+        actions.appendChild(del);
+
+        const left = document.createElement('div');
+        left.style.display='grid';
+        left.style.gridTemplateColumns='auto 1fr';
+        left.style.alignItems='center';
+        left.style.gap='10px';
+        left.appendChild(cb);
+        left.appendChild(text);
+
+        row.appendChild(left);
+        row.appendChild(meta);
+        row.appendChild(actions);
+
+        listEl.appendChild(row);
+      });
+    }
+
+    function addItem(txt){
+      const clean = normalizeText(txt);
+      if(!clean){ input.focus(); return; }
+      items.push({ id:crypto.randomUUID?.() || String(Date.now()+Math.random()), text:clean, done:false, created:Date.now() });
+      save(); render(); input.value=''; input.focus();
+    }
+
+    function toggleDone(id, done){
+      const it = items.find(x=>x.id===id);
+      if(!it) return;
+      it.done = !!done;
+      save(); render();
+    }
+
+    function removeItem(id){
+      items = items.filter(x=>x.id!==id);
+      save(); render();
+    }
+
+    function resetAll(){
+      if(!confirm('Hapus semua Note?')) return;
+      items = [];
+      save(); render();
+    }
+
+    // events
+    form.addEventListener('submit', (e)=>{ e.preventDefault(); addItem(input.value); });
+    btnReset.addEventListener('click', resetAll);
+
+    listEl.addEventListener('click', (e)=>{
+      const row = e.target.closest('.note-item');
+      if(!row) return;
+      const id = row.dataset.id;
+      if(e.target.matches('input[type="checkbox"]')){
+        toggleDone(id, e.target.checked);
+      } else if(e.target.matches('.note-icon-btn')){
+        removeItem(id);
+      }
+    });
+
+    // init
+    load(); render();
+  </script>
+</body>
+</html>
